@@ -27,7 +27,7 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Raylib as static libraries" FORCE)
 
 
 
-project(mygame)
+project(raylib_plateformer)
 
 
 
@@ -85,4 +85,12 @@ target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURC
 # Link raylib library statically, Here wou would add other libraries!
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE 
 	raylib_static imgui rlimgui
+)
+
+add_custom_command(
+    TARGET "${CMAKE_PROJECT_NAME}" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/resources"
+        "$<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resources"
+    COMMENT "Copying resources directory to build output"
 )
