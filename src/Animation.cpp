@@ -29,7 +29,22 @@ void Animation::Update(float deltaTime) {
     }
 }
 
-void Animation::Render(Vector2 position, Color tint) {
-    Rectangle rect = {(int)this->current_frame * this->width, (this->current_row - 1) * this->height, this->width, this->height};
+void Animation::Render(Vector2 position, Color tint, bool flipX) {
+    Rectangle rect = {};
+    rect.x = (float)((int)this->current_frame * this->width);
+    rect.y = (float)((this->current_row -1) * this->height);
+    rect.height = (float)this->height;
+
+    if (flipX) {
+        rect.width = (float)-this->width;
+    }
+    else {
+        rect.width = (float)this->width;
+    }
+
     DrawTextureRec(this->texture, rect, position, tint);
+}
+
+void Animation::Reset() {
+    this->current_frame = 0.0f;
 }

@@ -5,17 +5,29 @@ Player::Player(Vector2 position, float speed, bool canJump) {
     this->speed = speed;
     this->canJump = canJump;
 
-    this->animations["idle"] = new Animation(
-        "resources/character_templates/idle/player_idle_48_48.png",
-        48, 48,
-        1, 12
-    );
-    this->animation = this->animations["idle"];
+    this->animations[IDLE] = new Animation("resources/character_templates/idle/player_idle_48_48.png", 48, 48, 1, 12);
+    this->animations[WALK] = new Animation("resources/character_templates/walk/player_walk_48_48.png", 48, 48, 1, 12);
+    this->state = IDLE;
+    this->direction = RIGHT;
+    this->animation = this->animations[this->state];
 }
 
 void Player::Update(std::vector<EnvItem>& envItems, float deltaTime) {
-    if (IsKeyDown(KEY_A)) this->position.x -= PLAYER_HOR_SPD * deltaTime;
-	if (IsKeyDown(KEY_D)) this->position.x += PLAYER_HOR_SPD * deltaTime;
+    State newState = this->state;
+    if (IsKeyDown(KEY_A)) {
+        this->position.x -= PLAYER_HOR_SPD * deltaTime;
+        newState = WALK;
+        this->direction = LEFT;
+    }
+	else if (IsKeyDown(KEY_D)) {
+        this->position.x += PLAYER_HOR_SPD * deltaTime;
+        newState = WALK;
+        this->direction = RIGHT;
+    }
+    else {
+        newState = IDLE;
+    }
+    
 	if (IsKeyDown(KEY_SPACE) && this->canJump) {
 		this->speed = -PLAYER_JUMP_SPD;
 		this->canJump = false;
@@ -46,13 +58,19 @@ void Player::Update(std::vector<EnvItem>& envItems, float deltaTime) {
 		this->canJump = true;
 	}
 
+    if (newState != this->state) {
+        this->state = newState;
+        this->animation = this->animations[this->state];
+        this->animation->Reset();
+    }
     this->animation->Update(deltaTime);
 }
 
 void Player::Draw() {
-    // Rectangle rect = { this->position.x - 20, this->position.y - 40, 40.0f, 40.0f };
-	// DrawRectangleRec(rect, RED);
-
-	// DrawCircleV(this->position, 5.0f, GOLD);
-    this->animation->Render({ this->position.x - 20, this->position.y - 40});
+    if (this->direction == LEFT) {
+        this->animation->Render({ this->position.x - 20, this->position.y - 40}, WHITE, true);
+    }
+    else {
+        this->animation->Render({ this->position.x - 20, this->position.y - 40});
+    }
 }

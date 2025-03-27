@@ -9,7 +9,8 @@ class Animation {
         Animation(Texture2D texture, int width, int height, int current_row, float animationSpeed);
         Animation(std::string texture, int width, int height, int current_row, float animationSpeed);
         void Update(float deltaTime);
-        void Render(Vector2 position, Color tint = WHITE);
+        void Render(Vector2 position, Color tint = WHITE, bool flipX = false);
+        void Reset();
 
     private:
         Texture2D texture;
