@@ -5,8 +5,10 @@
 #include "raymath.h"
 #include <vector>
 #include <string>
+#include <map>
 
-#include <EnvItem.hpp>
+#include "EnvItem.hpp"
+#include "Animation.hpp"
 
 #define G 400
 #define PLAYER_JUMP_SPD 350.0f
@@ -17,6 +19,8 @@ class Player {
         Vector2 position;
         float speed;
         bool canJump;
+        std::map<std::string, Animation*> animations;
+        Animation* animation;
 
         Player(Vector2 position, float speed, bool canJump);
         void Update(std::vector<EnvItem>& envItems, float delta);
